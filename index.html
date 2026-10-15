@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Misión SuperCientífico - Física y Química</title>
+  <style>
+    :root {
+      --bg-color: #f0f4f8;
+      --card-bg: #ffffff;
+      --primary: #3182ce;
+      --primary-hover: #2b6cb0;
+      --success: #38a169;
+      --danger: #e53e3e;
+      --warning: #dd6b20;
+      --text: #2d3748;
+    }
+
+    * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-color); color: var(--text); margin: 0; padding: 20px; }
+
+    .container { max-width: 800px; margin: 0 auto; background: var(--card-bg); padding: 25px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+    
+    header { text-align: center; border-bottom: 3px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px; }
+    h1 { color: #1a365d; margin: 5px 0; font-size: 1.8rem; }
+    
+    /* Progress Bar */
+    .progress-box { background: #edf2f7; border-radius: 10px; height: 20px; width: 100%; overflow: hidden; margin: 15px 0; }
+    .progress-bar { background: var(--success); height: 100%; width: 0%; transition: width 0.4s ease; }
+    .score-badge { display: inline-block; background: #fefcbf; color: #744210; padding: 6px 16px; border-radius: 20px; font-weight: bold; font-size: 1.1rem; }
+
+    /* Nav Buttons */
+    .nav-tabs { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 25px; }
+    .tab-btn { background: #e2e8f0; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: bold; color: #4a5568; transition: 0.2s; }
+    .tab-btn.active { background: var(--primary); color: white; }
+
+    /* Mission Sections */
+    .mission { display: none; animation: fadeIn 0.3s ease-in; }
+    .mission.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    .card { background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 12px; padding: 18px; margin-bottom: 15px; }
+    .card-title { font-weight: bold; font-size: 1.1rem; color: #2b6cb0; margin-bottom: 10px; }
+
+    /* Interactive Elements */
+    .opt-btn { display: block; width: 100%; text-align: left; background: white; border: 2px solid #cbd5e0; padding: 12px; border-radius: 8px; margin: 8px 0; cursor: pointer; font-size: 1rem; transition: 0.2s; }
+    .opt-btn:hover { background: #ebf8ff; border-color: var(--primary); }
+    .opt-btn.correct { background: #c6f6d5 !important; border-color: var(--success) !important; color: #22543d; font-weight: bold; }
+    .opt-btn.incorrect { background: #fed7d7 !important; border-color: var(--danger) !important; color: #742a2a; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    @media(max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .symbol-card { text-align: center; font-size: 2rem; padding: 10px; background: white; border-radius: 8px; border: 1px solid #cbd5e0; }
+
+    /* Feedback message */
+    .feedback { font-weight: bold; margin-top: 10px; padding: 10px; border-radius: 8px; display: none; text-align: center; }
+    .feedback.show-good { display: block; background: #c6f6d5; color: #22543d; }
+    .feedback.show-bad { display: block; background: #fed7d7; color: #742a2a; }
+
+    .golden-rule { background: #fffaf0; border-left: 5px solid var(--warning); padding: 12px; border-radius: 6px; margin: 15px 0; font-weight: bold; }
+
+    /* Certificate */
+    #certificate { display: none; text-align: center; padding: 30px; background: #fefcbf; border: 4px dashed #d69e2e; border-radius: 15px; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>🔬 Misión SuperCientífico</h1>
+    <p>Física y Química - 2º ESO</p>
+    <div class="score-badge">⭐ Puntos: <span id="score">0</span> / 10</div>
+    <div class="progress-box">
+      <div class="progress-bar" id="progress"></div>
+    </div>
+  </header>
+
+  <!-- Navegación -->
+  <div class="nav-tabs">
+    <button class="tab-btn active" onclick="showMission(1)">1. Método Científico</button>
+    <button class="tab-btn" onclick="showMission(2)">2. Magnitudes</button>
+    <button class="tab-btn" onclick="showMission(3)">3. Unidades</button>
+    <button class="tab-btn" onclick="showMission(4)">4. Pictogramas</button>
+  </div>
+
+  <!-- MISIÓN 1: MÉTODO CIENTÍFICO -->
+  <div id="m1" class="mission active">
+    <div class="card">
+      <div class="card-title">💡 ¿Qué es la ciencia?</div>
+      <p>La ciencia sirve para explicar el mundo que nos rodea y solo se basa en lo que podemos...</p>
+      <button class="opt-btn" onclick="checkQ(this, true, 1)">A) Observar y medir</button>
+      <button class="opt-btn" onclick="checkQ(this, false, 1)">B) Adivinar e imaginar</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔍 Paso 1 del Método Científico</div>
+      <p>¿Qué hacemos en el primer paso (Observación)?</p>
+      <button class="opt-btn" onclick="checkQ(this, false, 1)">A) Sacar la conclusión final directamente</button>
+      <button class="opt-btn" onclick="checkQ(this, true, 1)">B) Observar atentamente la realidad para descubrir un problema</button>
+    </div>
+
+    <div class="golden-rule">
+      ⭐ REGLA DE ORO: Si al hacer el experimento la respuesta falla...
+      <p style="font-weight: normal; margin-top: 5px;">Debemos pensar una <b>nueva respuesta (hipótesis)</b> y volver a empezar desde el <b>Paso 2</b>.</p>
+    </div>
+  </div>
+
+  <!-- MISIÓN 2: MAGNITUDES -->
+  <div id="m2" class="mission">
+    <div class="card">
+      <div class="card-title">📏 ¿Qué es una Magnitud?</div>
+      <p>Una magnitud es todo lo que se puede medir con un número y un instrumento (reloj, báscula, regla).</p>
+      <p><b>Clasifica los ejemplos del examen:</b></p>
+      
+      <div class="grid-2">
+        <div>
+          <p><b>1. "El peso de un balón"</b></p>
+          <button class="opt-btn" onclick="checkQ(this, true, 2)">✅ SÍ es magnitud</button>
+          <button class="opt-btn" onclick="checkQ(this, false, 2)">❌ NO es magnitud</button>
+        </div>
+        <div>
+          <p><b>2. "El cariño de una madre"</b></p>
+          <button class="opt-btn" onclick="checkQ(this, false, 2)">✅ SÍ es magnitud</button>
+          <button class="opt-btn" onclick="checkQ(this, true, 2)">❌ NO es magnitud (Tachar)</button>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top: 10px;">
+        <div>
+          <p><b>3. "Lo que dura una siesta"</b></p>
+          <button class="opt-btn" onclick="checkQ(this, true, 2)">✅ SÍ es magnitud</button>
+          <button class="opt-btn" onclick="checkQ(this, false, 2)">❌ NO es magnitud</button>
+        </div>
+        <div>
+          <p><b>4. "El miedo"</b></p>
+          <button class="opt-btn" onclick="checkQ(this, false, 2)">✅ SÍ es magnitud</button>
+          <button class="opt-btn" onclick="checkQ(this, true, 2)">❌ NO es magnitud (Tachar)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISIÓN 3: UNIDADES -->
+  <div id="m3" class="mission">
+    <div class="card">
+      <div class="card-title">⏱️ Relaciona cada medición con su Unidad y Símbolo</div>
+      
+      <p><b>1. La distancia entre dos ciudades se mide en...</b></p>
+      <button class="opt-btn" onclick="checkQ(this, true, 3)">Kilómetros (km)</button>
+      <button class="opt-btn" onclick="checkQ(this, false, 3)">Gramos (g)</button>
+
+      <p><b>2. Lo que mide tu habitación (superficie) se mide en...</b></p>
+      <button class="opt-btn" onclick="checkQ(this, false, 3)">Minutos (min)</button>
+      <button class="opt-btn" onclick="checkQ(this, true, 3)">Metros cuadrados (m²)</button>
+
+      <p><b>3. Tu peso se mide en...</b></p>
+      <button class="opt-btn" onclick="checkQ(this, true, 3)">Kilogramos (kg)</button>
+      <button class="opt-btn" onclick="checkQ(this, false, 3)">Horas (h)</button>
+    </div>
+  </div>
+
+  <!-- MISIÓN 4: PICTOGRAMAS -->
+  <div id="m4" class="mission">
+    <div class="card">
+      <div class="card-title">⚠️ Pictogramas de Seguridad en el Laboratorio</div>
+      <p>Identifica la advertencia de cada etiqueta:</p>
+
+      <div class="grid-2">
+        <div class="symbol-card">☠️<br><small style="font-size: 1rem;">Calavera</small></div>
+        <div>
+          <button class="opt-btn" onclick="checkQ(this, true, 4)">SUSTANCIA TÓXICA</button>
+          <button class="opt-btn" onclick="checkQ(this, false, 4)">EXPLOSIVO</button>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:15px;">
+        <div class="symbol-card">🌳 🐟<br><small style="font-size: 1rem;">Árbol y Pez</small></div>
+        <div>
+          <button class="opt-btn" onclick="checkQ(this, true, 4)">DAÑINO PARA EL MEDIO AMBIENTE</button>
+          <button class="opt-btn" onclick="checkQ(this, false, 4)">SUSTANCIA PELIGROSA</button>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:15px;">
+        <div class="symbol-card">❌<br><small style="font-size: 1rem;">Cruz Negra</small></div>
+        <div>
+          <button class="opt-btn" onclick="checkQ(this, true, 4)">SUSTANCIA PELIGROSA</button>
+          <button class="opt-btn" onclick="checkQ(this, false, 4)">SUSTANCIA TÓXICA</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DIPLOMA FINAL -->
+  <div id="certificate">
+    <h2 style="color: #b7791f; font-size: 2rem; margin-bottom: 5px;">🏆 ¡ENHORABUENA! 🏆</h2>
+    <h3>¡Has completado todas las misiones de Física y Química!</h3>
+    <p>Demostraste dominar el Método Científico, las Magnitudes, las Unidades y la Seguridad en el Laboratorio.</p>
+    <div style="font-size: 3rem; margin: 15px 0;">🌟 🧪 🎓</div>
+    <button onclick="location.reload()" class="tab-btn" style="background: #d69e2e; color: white;">Volver a Repasar</button>
+  </div>
+
+</div>
+
+<script>
+  let totalScore = 0;
+  const maxScore = 10;
+  const answered = new Set();
+
+  function showMission(num) {
+    document.querySelectorAll('.mission').forEach(m => m.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    
+    document.getElementById('m' + num).classList.add('active');
+    document.querySelectorAll('.tab-btn')[num - 1].classList.add('active');
+  }
+
+  function checkQ(btn, isCorrect, missionNum) {
+    const parent = btn.parentElement;
+    if (parent.dataset.answered) return; 
+
+    parent.dataset.answered = "true";
+    const buttons = parent.querySelectorAll('.opt-btn');
+
+    if (isCorrect) {
+      btn.classList.add('correct');
+      totalScore++;
+      document.getElementById('score').innerText = totalScore;
+      updateProgress();
+    } else {
+      btn.classList.add('incorrect');
+      buttons.forEach(b => {
+        if (b !== btn && b.getAttribute('onclick').includes('true')) {
+          b.classList.add('correct');
+        }
+      });
+    }
+
+    if (totalScore >= maxScore) {
+      setTimeout(() => {
+        document.querySelectorAll('.mission').forEach(m => m.style.display = 'none');
+        document.getElementById('certificate').style.display = 'block';
+      }, 800);
+    }
+  }
+
+  function updateProgress() {
+    const pct = Math.min((totalScore / maxScore) * 100, 100);
+    document.getElementById('progress').style.width = pct + '%';
+  }
+</script>
+
+</body>
+</html>
